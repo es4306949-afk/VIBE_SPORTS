@@ -32,7 +32,8 @@
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 14px; color: var(--vibe-neon); }
         .form-group input, .form-group select { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; outline: none; }
-        .btn-save { background: var(--vibe-neon); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; }
+        .btn-save { background: var(--vibe-neon); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; margin-bottom: 10px; }
+        .btn-clear { background: #444; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 12px; }
 
         /* FILTROS */
         .categories { display: flex; gap: 10px; margin: 30px 0; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
@@ -45,22 +46,11 @@
         .product-card:hover { border-color: var(--vibe-neon); transform: translateY(-5px); }
         .product-img { width: 100%; height: 320px; object-fit: cover; background: #222; }
         
-        /* INFO PRODUTO E PREÇO */
         .product-info { padding: 20px; }
         .product-info h3 { font-size: 18px; margin-bottom: 10px; }
         
-        .container-preco { 
-            display: flex; 
-            flex-direction: column; 
-            margin: 10px 0 20px 0; 
-        }
-        .legenda-item { 
-            font-size: 11px; 
-            color: var(--gray-text); 
-            text-transform: uppercase; 
-            font-weight: bold;
-            margin-bottom: -2px;
-        }
+        .container-preco { display: flex; flex-direction: column; margin: 10px 0 20px 0; }
+        .legenda-item { font-size: 11px; color: var(--gray-text); text-transform: uppercase; font-weight: bold; margin-bottom: -2px; }
         .price { color: var(--vibe-neon); font-size: 26px; font-weight: 900; }
         .category-tag { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
@@ -83,11 +73,17 @@
 
     <main class="container">
         <section id="admin-panel">
-            <h2 style="margin-bottom: 20px;">Gerenciar Catálogo</h2>
-            <div class="form-group"><label>Nome do Produto</label><input type="text" id="prod-nome" placeholder="Ex: Chuteira Umbro"></div>
+            <h2 style="margin-bottom: 20px; color: var(--vibe-neon);">Gerenciar Catálogo</h2>
+            <div class="form-group"><label>Nome do Produto</label><input type="text" id="prod-nome"></div>
             <div class="form-group"><label>Legenda (Opcional)</label><input type="text" id="prod-legenda" placeholder="Ex: A partir de"></div>
             <div class="form-group"><label>Preço</label><input type="text" id="prod-preco" placeholder="Ex: 119,90"></div>
-            <div class="form-group"><label>URL da Imagem</label><input type="text" id="prod-img"></div>
+            
+            <div class="form-group">
+                <label>Foto do Produto (Câmera ou Galeria)</label>
+                <input type="file" id="prod-foto-file" accept="image/*">
+                <input type="hidden" id="prod-img-base64">
+            </div>
+
             <div class="form-group">
                 <label>Categoria</label>
                 <select id="prod-cat">
@@ -99,11 +95,12 @@
                 </select>
             </div>
             <button class="btn-save" id="btnSalvar">ADICIONAR AO CATÁLOGO</button>
+            <button class="btn-clear" onclick="limparEstoque()">LIMPAR ESTOQUE DE EXEMPLO</button>
         </section>
 
         <div class="categories" id="filterBar">
             <button class="cat-btn active" data-cat="Todos">Todos</button>
-            <button class="cat-btn" data-cat="Sport">Sport</button>
+            <button class="cat-btn" data-cat="Masculino">Masculino</button>
             <button class="cat-btn" data-cat="Feminino">Feminino</button>
             <button class="cat-btn" data-cat="Chuteiras">Chuteiras</button>
             <button class="cat-btn" data-cat="Bolas">Bolas</button>
@@ -117,9 +114,9 @@
 
     <script>
         const WHATS_APP = "5599999999999"; 
-        const PASS_ADM = "2004";
+        const PASS_ADM = "1234";
 
-        // Dados iniciais de exemplo
+             // Dados iniciais de exemplo
         const base = [
              { id: 1, nome: "Camisas de times", preco: "49,90", legenda: "A partir de", cat: "sport", img: "https://down-br.img.susercontent.com/file/br-11134201-23020-wr8rzpttkpnve3"},
             { id: 1, nome: "Chuteira society", preco: "119,90", legenda: "A partir de", cat: "Chuteiras", img: "https://17889.cdn.simplo7.net/static/17889/sku/homens-chuteira-umbro-u01fb051-327-society-cosmic-azul-royal-1687553295887.png" },
@@ -134,40 +131,60 @@
             { id: 4, nome: "Balaclava", preco: "14,90", legenda: "A partir de", cat: "Acessórios", img: "https://m.magazineluiza.com.br/a-static/420x420/balaclava-camuflada-touca-ninja-moto-toca-uv50/olistsp/ospaz9zrej7qx9ie/9801e55443bce087c47d37cf62b1e53d.jpeg" },
             { id: 5, nome: "Bolsa Esportiva", preco: "19,90", legenda: "A partir de", cat: "Acessórios", img: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-ltbhq561hwiocf" }
 
+
         ];
 
-        let db = JSON.parse(localStorage.getItem('vibe_v6')) || base;
+        let db = JSON.parse(localStorage.getItem('vibe_v8')) || base;
         let isAdmin = false;
+
+        // LÓGICA DA CÂMERA
+        document.getElementById('prod-foto-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 600;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    document.getElementById('prod-img-base64').value = canvas.toDataURL('image/jpeg', 0.7);
+                    alert("Foto carregada com sucesso!");
+                }
+            }
+        });
 
         function draw(filtro = "Todos") {
             const list = document.getElementById('catalog');
             list.innerHTML = "";
-            
             const filtered = filtro === "Todos" ? db : db.filter(p => p.cat === filtro);
 
             filtered.forEach(p => {
-                const link = `https://wa.me/${WHATS_APP}?text=Olá! Gostaria de saber mais sobre o produto: ${p.nome}`;
+                const link = `https://wa.me/${WHATS_APP}?text=Olá! Gostaria de saber mais sobre: ${p.nome}`;
                 list.innerHTML += `
                     <div class="product-card">
                         <img src="${p.img}" class="product-img" onerror="this.src='https://via.placeholder.com/300?text=Vibe+Sports'">
                         <div class="product-info">
                             <span class="category-tag">${p.cat}</span>
                             <h3>${p.nome}</h3>
-                            
                             <div class="container-preco">
                                 ${p.legenda ? `<span class="legenda-item">${p.legenda}</span>` : ''}
                                 <p class="price">R$ ${p.preco}</p>
                             </div>
-
                             ${isAdmin ? `<button class="delete-btn" onclick="removeItem(${p.id})">REMOVER PRODUTO</button>` 
                                       : `<a href="${link}" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> EU QUERO ESTE</a>`}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         }
 
-        // Lógica do Painel ADM
         document.getElementById('btnAdmOpen').addEventListener('click', () => {
             if(isAdmin) {
                 isAdmin = false;
@@ -185,35 +202,42 @@
 
         document.getElementById('btnSalvar').addEventListener('click', () => {
             const n = document.getElementById('prod-nome').value;
-            const l = document.getElementById('prod-legenda').value; // Novo campo
+            const l = document.getElementById('prod-legenda').value;
             const p = document.getElementById('prod-preco').value;
-            const i = document.getElementById('prod-img').value;
+            const i = document.getElementById('prod-img-base64').value;
             const c = document.getElementById('prod-cat').value;
 
-            if(!n || !p || !i) return alert("Preencha Nome, Preço e Imagem!");
+            if(!n || !p || !i) return alert("Preencha Nome, Preço e Tire a Foto!");
 
             db.unshift({ id: Date.now(), nome: n, legenda: l, preco: p, img: i, cat: c });
-            localStorage.setItem('vibe_v6', JSON.stringify(db));
+            localStorage.setItem('vibe_v8', JSON.stringify(db));
             
-            // Limpa os campos
             document.getElementById('prod-nome').value = "";
             document.getElementById('prod-legenda').value = "";
             document.getElementById('prod-preco').value = "";
-            document.getElementById('prod-img').value = "";
+            document.getElementById('prod-img-base64').value = "";
+            document.getElementById('prod-foto-file').value = "";
             
             draw();
-            alert("Produto adicionado com sucesso!");
+            alert("Produto adicionado!");
         });
 
         window.removeItem = (id) => {
-            if(confirm("Deseja realmente excluir este produto?")) {
+            if(confirm("Excluir produto?")) {
                 db = db.filter(x => x.id !== id);
-                localStorage.setItem('vibe_v6', JSON.stringify(db));
+                localStorage.setItem('vibe_v8', JSON.stringify(db));
                 draw();
             }
         };
 
-        // Filtros de Categoria
+        window.limparEstoque = () => {
+            if(confirm("Isso apagará todos os produtos cadastrados. Continuar?")) {
+                db = [];
+                localStorage.setItem('vibe_v8', JSON.stringify(db));
+                draw();
+            }
+        };
+
         document.getElementById('filterBar').addEventListener('click', (e) => {
             if(e.target.classList.contains('cat-btn')) {
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -226,6 +250,3 @@
     </script>
 </body>
 </html>
-
-
-
