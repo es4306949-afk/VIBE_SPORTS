@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibe Sports | Catálogo</title>
+    <title>Vibe Sports | Catálogo Profissional</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -13,14 +13,15 @@
             --dark-gray: #151515;
             --vibe-neon: #ccff00;
             --white: #ffffff;
+            --gray-text: #a0a0a0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--black); color: var(--white); font-family: 'Inter', sans-serif; }
+        body { background-color: var(--black); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
         /* HEADER */
-        header { padding: 15px 0; background: #000; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
+        header { padding: 15px 0; background: rgba(0,0,0,0.9); border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
         .nav-bar { display: flex; align-items: center; justify-content: space-between; }
         .logo { font-weight: 900; font-size: 24px; font-style: italic; cursor: pointer; color: white; text-decoration: none; }
         .logo span { color: var(--vibe-neon); }
@@ -34,22 +35,41 @@
         .btn-save { background: var(--vibe-neon); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: 900; cursor: pointer; width: 100%; text-transform: uppercase; }
 
         /* FILTROS */
-        .categories { display: flex; gap: 10px; margin: 30px 0; overflow-x: auto; padding-bottom: 10px; }
-        .cat-btn { background: var(--dark-gray); color: white; border: 1px solid #333; padding: 12px 25px; border-radius: 50px; cursor: pointer; white-space: nowrap; font-weight: bold; }
+        .categories { display: flex; gap: 10px; margin: 30px 0; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .cat-btn { background: var(--dark-gray); color: white; border: 1px solid #333; padding: 12px 25px; border-radius: 50px; cursor: pointer; white-space: nowrap; font-weight: bold; transition: 0.3s; }
         .cat-btn.active { background: var(--vibe-neon); color: black; border-color: var(--vibe-neon); }
 
         /* GRID PRODUTOS */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .product-card { background: var(--dark-gray); border-radius: 15px; overflow: hidden; border: 1px solid #222; position: relative; }
+        .product-card { background: var(--dark-gray); border-radius: 15px; overflow: hidden; border: 1px solid #222; position: relative; transition: 0.3s; }
+        .product-card:hover { border-color: var(--vibe-neon); transform: translateY(-5px); }
         .product-img { width: 100%; height: 320px; object-fit: cover; background: #222; }
+        
+        /* INFO PRODUTO E PREÇO */
         .product-info { padding: 20px; }
-        .price { color: var(--vibe-neon); font-size: 24px; font-weight: 900; margin: 10px 0; }
-        .category-tag { font-size: 11px; color: #888; text-transform: uppercase; }
+        .product-info h3 { font-size: 18px; margin-bottom: 10px; }
+        
+        .container-preco { 
+            display: flex; 
+            flex-direction: column; 
+            margin: 10px 0 20px 0; 
+        }
+        .legenda-item { 
+            font-size: 11px; 
+            color: var(--gray-text); 
+            text-transform: uppercase; 
+            font-weight: bold;
+            margin-bottom: -2px;
+        }
+        .price { color: var(--vibe-neon); font-size: 26px; font-weight: 900; }
+        .category-tag { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
-        .btn-whatsapp { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: white; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 10px; }
-        .delete-btn { background: #ff3333; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; }
+        /* BOTÕES */
+        .btn-whatsapp { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25d366; color: white; padding: 14px; border-radius: 10px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .btn-whatsapp:hover { background: #1da851; }
+        .delete-btn { background: #ff3333; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; }
 
-        .float-insta { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 1000; text-decoration: none; }
+        .float-insta { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 1000; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
@@ -64,9 +84,10 @@
     <main class="container">
         <section id="admin-panel">
             <h2 style="margin-bottom: 20px;">Gerenciar Catálogo</h2>
-            <div class="form-group"><label>Nome</label><input type="text" id="prod-nome"></div>
-            <div class="form-group"><label>Preço</label><input type="text" id="prod-preco"></div>
-            <div class="form-group"><label>URL Imagem</label><input type="text" id="prod-img"></div>
+            <div class="form-group"><label>Nome do Produto</label><input type="text" id="prod-nome" placeholder="Ex: Chuteira Umbro"></div>
+            <div class="form-group"><label>Legenda (Opcional)</label><input type="text" id="prod-legenda" placeholder="Ex: A partir de"></div>
+            <div class="form-group"><label>Preço</label><input type="text" id="prod-preco" placeholder="Ex: 119,90"></div>
+            <div class="form-group"><label>URL da Imagem</label><input type="text" id="prod-img"></div>
             <div class="form-group">
                 <label>Categoria</label>
                 <select id="prod-cat">
@@ -77,12 +98,12 @@
                     <option value="Acessórios">Acessórios</option>
                 </select>
             </div>
-            <button class="btn-save" id="btnSalvar">ADICIONAR PRODUTO</button>
+            <button class="btn-save" id="btnSalvar">ADICIONAR AO CATÁLOGO</button>
         </section>
 
         <div class="categories" id="filterBar">
             <button class="cat-btn active" data-cat="Todos">Todos</button>
-            <button class="cat-btn" data-cat="Masculino">Masculino</button>
+            <button class="cat-btn" data-cat="Sport">Sport</button>
             <button class="cat-btn" data-cat="Feminino">Feminino</button>
             <button class="cat-btn" data-cat="Chuteiras">Chuteiras</button>
             <button class="cat-btn" data-cat="Bolas">Bolas</button>
@@ -95,23 +116,29 @@
     <a href="https://www.instagram.com/vibesports_lagoacu/" target="_blank" class="float-insta"><i class="fab fa-instagram"></i></a>
 
     <script>
-        // CONFIGURAÇÕES
         const WHATS_APP = "5599999999999"; 
         const PASS_ADM = "Vibe26";
 
-        // PRODUTOS PADRÃO (Caso o catálogo suma, eles voltam)
+        // Dados iniciais de exemplo
         const base = [
-            { id: 1, nome: "Bola Nike Skills", preco: "159,90", cat: "Bolas", img: "https://images.unsplash.com/photo-1614632537190-23e414dcb339?q=80&w=500" },
-            { id: 2, nome: "Chuteira Adidas Speed", preco: "299,90", cat: "Chuteiras", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=500" },
-            { id: 3, nome: "Camisa Masculina Vibe", preco: "119,90", cat: "Masculino", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=500" },
-            { id: 4, nome: "Camisa Feminina Vibe", preco: "119,90", cat: "Feminino", img: "https://images.unsplash.com/photo-1551854323-9420df56b515?q=80&w=500" },
-            { id: 5, nome: "Mochila Esportiva", preco: "85,00", cat: "Acessórios", img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=500" }
+             { id: 1, nome: "Camisas de times", preco: "49,90", legenda: "A partir de", cat: "sport", img: "https://down-br.img.susercontent.com/file/br-11134201-23020-wr8rzpttkpnve3"},
+            { id: 1, nome: "Chuteira society", preco: "119,90", legenda: "A partir de", cat: "Chuteiras", img: "https://17889.cdn.simplo7.net/static/17889/sku/homens-chuteira-umbro-u01fb051-327-society-cosmic-azul-royal-1687553295887.png" },
+            { id: 2, nome: "Tênis esportivo", preco: "119,90", legenda: "A partir de", cat: "sport", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=500" },
+            { id: 2, nome: "Chuteira Campo", preco: "119,90", legenda: "A partir de", cat: "Chuteiras", img: "https://static.clube.netshoes.com.br/produtos/chuteira-campo-adidas-deportivo-iii-campo-unissex/02/FB9-8305-002/FB9-8305-002_zoom1.jpg?ts=1770525449&ims=544x" },
+            { id: 2, nome: "Short Mauricinho", preco: "49,90", legenda: "A partir de", cat: "todos", img: "https://img.irroba.com.br/filters:fill(fff):quality(80)/camieeua/catalog/bermuda-sarja/boss/whatsapp-image-2024-09-11-at-094923-2.jpeg" },
+            { id: 2, nome: "Short Compressão", preco: "29,90", legenda: "A partir de", cat: "sport", img: "https://http2.mlstatic.com/D_NQ_NP_615145-MLB90274630198_082025-O-short-duplo-compreenso-fitness-bermuda-academia-feminino.webp" },  
+            { id: 2, nome: "Bola de volei", preco: "119,90", legenda: "A partir de", cat: "Chuteiras", img: "https://imgs.extra.com.br/1566533465/1xg.jpg?imwidth=1000" },
+            { id: 2, nome: "Camisas Dry-Fit", preco: "29,90", legenda: "A partir de", cat: "sport", img: "https://static.netshoes.com.br/produtos/kit-5-camiseta-masculina-dry-protecao-solar-uv-termica-academia-treino-camisa-praia-camisetas/18/3R2-0046-118/3R2-0046-118_zoom1.jpg?ts=1769345649&ims=544x" },
+            { id: 2, nome: "Boné", preco: "19,90", legenda: "A partir de", cat: "acessórios", img: "https://http2.mlstatic.com/D_NQ_NP_820126-MLB84101511081_042025-O-kit-bones-10-marca-aba-curva-atacado-revenda-new-country-ny.webp" },      
+            { id: 3, nome: "Camisa Masculina Vibe", preco: "119,90", legenda: "A partir de", cat: "Masculino", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=500" },
+            { id: 4, nome: "Balaclava", preco: "14,90", legenda: "A partir de", cat: "Acessórios", img: "https://m.magazineluiza.com.br/a-static/420x420/balaclava-camuflada-touca-ninja-moto-toca-uv50/olistsp/ospaz9zrej7qx9ie/9801e55443bce087c47d37cf62b1e53d.jpeg" },
+            { id: 5, nome: "Bolsa Esportiva", preco: "19,90", legenda: "A partir de", cat: "Acessórios", img: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-ltbhq561hwiocf" }
+
         ];
 
-        let db = JSON.parse(localStorage.getItem('vibe_v5')) || base;
+        let db = JSON.parse(localStorage.getItem('vibe_v6')) || base;
         let isAdmin = false;
 
-        // FUNÇÃO DE RENDERIZAÇÃO
         function draw(filtro = "Todos") {
             const list = document.getElementById('catalog');
             list.innerHTML = "";
@@ -119,59 +146,74 @@
             const filtered = filtro === "Todos" ? db : db.filter(p => p.cat === filtro);
 
             filtered.forEach(p => {
-                const link = `https://wa.me/${WHATS_APP}?text=Quero saber sobre: ${p.nome}`;
+                const link = `https://wa.me/${WHATS_APP}?text=Olá! Gostaria de saber mais sobre o produto: ${p.nome}`;
                 list.innerHTML += `
                     <div class="product-card">
                         <img src="${p.img}" class="product-img" onerror="this.src='https://via.placeholder.com/300?text=Vibe+Sports'">
                         <div class="product-info">
                             <span class="category-tag">${p.cat}</span>
                             <h3>${p.nome}</h3>
-                            <p class="price">R$ ${p.preco}</p>
-                            ${isAdmin ? `<button class="delete-btn" onclick="removeItem(${p.id})">REMOVER</button>` 
-                                      : `<a href="${link}" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> COMPRAR</a>`}
+                            
+                            <div class="container-preco">
+                                ${p.legenda ? `<span class="legenda-item">${p.legenda}</span>` : ''}
+                                <p class="price">R$ ${p.preco}</p>
+                            </div>
+
+                            ${isAdmin ? `<button class="delete-btn" onclick="removeItem(${p.id})">REMOVER PRODUTO</button>` 
+                                      : `<a href="${link}" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> EU QUERO ESTE</a>`}
                         </div>
                     </div>
                 `;
             });
         }
 
-        // EVENTOS DE BOTÕES
+        // Lógica do Painel ADM
         document.getElementById('btnAdmOpen').addEventListener('click', () => {
             if(isAdmin) {
                 isAdmin = false;
                 document.getElementById('admin-panel').style.display = 'none';
                 draw();
             } else {
-                const pass = prompt("Senha ADM:");
+                const pass = prompt("Senha de Acesso:");
                 if(pass === PASS_ADM) {
                     isAdmin = true;
                     document.getElementById('admin-panel').style.display = 'block';
                     draw();
-                } else { alert("Senha Errada!"); }
+                } else { alert("Senha incorreta!"); }
             }
         });
 
         document.getElementById('btnSalvar').addEventListener('click', () => {
             const n = document.getElementById('prod-nome').value;
+            const l = document.getElementById('prod-legenda').value; // Novo campo
             const p = document.getElementById('prod-preco').value;
             const i = document.getElementById('prod-img').value;
             const c = document.getElementById('prod-cat').value;
 
-            if(!n || !p || !i) return alert("Preencha tudo!");
+            if(!n || !p || !i) return alert("Preencha Nome, Preço e Imagem!");
 
-            db.unshift({ id: Date.now(), nome: n, preco: p, img: i, cat: c });
-            localStorage.setItem('vibe_v5', JSON.stringify(db));
+            db.unshift({ id: Date.now(), nome: n, legenda: l, preco: p, img: i, cat: c });
+            localStorage.setItem('vibe_v6', JSON.stringify(db));
+            
+            // Limpa os campos
+            document.getElementById('prod-nome').value = "";
+            document.getElementById('prod-legenda').value = "";
+            document.getElementById('prod-preco').value = "";
+            document.getElementById('prod-img').value = "";
+            
             draw();
-            alert("Salvo!");
+            alert("Produto adicionado com sucesso!");
         });
 
         window.removeItem = (id) => {
-            db = db.filter(x => x.id !== id);
-            localStorage.setItem('vibe_v5', JSON.stringify(db));
-            draw();
+            if(confirm("Deseja realmente excluir este produto?")) {
+                db = db.filter(x => x.id !== id);
+                localStorage.setItem('vibe_v6', JSON.stringify(db));
+                draw();
+            }
         };
 
-        // FILTROS
+        // Filtros de Categoria
         document.getElementById('filterBar').addEventListener('click', (e) => {
             if(e.target.classList.contains('cat-btn')) {
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -180,7 +222,6 @@
             }
         });
 
-        // INICIAR
         window.onload = () => draw();
     </script>
 </body>
